@@ -27,17 +27,21 @@ export default {
         ],
         link: [
             { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+            { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css' },
+
         ],
     },
 
     css: [
         '@/assets/main.scss',
         '@fortawesome/fontawesome-free/css/all.css',
+        'ant-design-vue/dist/antd.css',
     ],
 
     plugins: [
         '@/plugins/element-ui',
         '@/plugins/filters',
+        '@/plugins/antd-ui',
     ],
 
     robots: [
@@ -64,6 +68,7 @@ export default {
     },
 
     buildModules: [
+        '@nuxt/postcss8',
         '@nuxtjs/eslint-module',
         '@nuxtjs/fontawesome',
         '@nuxtjs/tailwindcss',
@@ -71,6 +76,15 @@ export default {
     ],
 
     modules: [
+        '@nuxtjs-extra/ant-design-vue',
+        [
+            '@nuxtjs-extra/ant-design-vue',
+            {
+                style: 'css', // available options: 'css', 'less'
+                useDayJs: false, // replace moment.js with day.js internally within 'ant-design-vue' for reducing package size
+            },
+        ],
+        '@nuxtjs/tailwindcss',
     ],
 
     build: {
@@ -78,7 +92,19 @@ export default {
         postcss: {
             plugins: {
                 tailwindcss: 'tailwind.config.js',
+                autoprefixer: {},
             },
+        },
+        loaders: {
+            sass: {
+                implementation: require('sass'),
+            },
+            scss: {
+                implementation: require('sass'),
+            },
+        },
+        extend(config) {
+            config.resolve.alias.vue = 'vue/dist/vue.common';
         },
     },
 
@@ -87,10 +113,17 @@ export default {
             id: process.env.GOOGLE_ANALYTICS_ID,
         },
     },
+    axios: {
+        // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
+        baseURL:
+        process.env.BASE_API_URL || 'https://flextext-f544f-default-rtdb.firebaseio.com',
+    },
 
     env: {
         apiHost: process.env.API_HOST || 'localhost',
         apiPath: process.env.API_PATH || '/api',
         appUrl: process.env.APP_URL || 'http://localhost:3000',
+        baseApiUrl: process.env.BASE_API_URL || 'https://flextext-f544f-default-rtdb.firebaseio.com',
+
     },
 };

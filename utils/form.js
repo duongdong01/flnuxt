@@ -5,6 +5,14 @@ export const validPhone = (rule, value, callback) => {
         callback(new Error('Số điện thoại đủ 10 số'));
     }
 };
+export const validName = (rule, value, callback) => {
+    // /^[a-z][a-z\s]*$/
+    if (/^[a-z][a-z\s]*$/.test(value)) {
+        callback();
+    } else {
+        callback(new Error('Tên không hợp lệ'));
+    }
+};
 
 export const validPassword = (rule, value, callback) => {
     if (/^[a-zA-Z0-9@$!%*#?&]{8,}$/.test(value)) {
